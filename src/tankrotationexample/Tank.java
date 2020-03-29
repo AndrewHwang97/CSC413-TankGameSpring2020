@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author anthony-pc
  */
-public class Tank{
+public class Tank {
 
 
     private int x;
@@ -32,17 +32,21 @@ public class Tank{
     private boolean LeftPressed;
     private boolean shootPressed;
 
+
     public ArrayList<Bullet> bulletList;
+    //HitBox hb;
+    Rectangle hitBox;
 
-
-    Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage) {
+    Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage,TankRotationExample game) {
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.tankImage = tankImage;
         this.angle = angle;
-        this.bulletList = new ArrayList<Bullet>();
+        this.bulletList = game.bulletList;
+        //this.hb = new HitBox(this);  //creates a hitbox object around the tank;
+        hitBox = new Rectangle(this.x,this.y,this.tankImage.getWidth(), this.tankImage.getHeight());
         try{
             bulletImage = ImageIO.read(Tank.class.getClassLoader().getResource("Rocket.gif"));
         } catch (IOException e) {
@@ -51,6 +55,10 @@ public class Tank{
 
     }
 
+    public int getX(){return x;}
+    public int getY(){return  y;}
+    public int getWidth(){return this.tankImage.getWidth();}
+    public int getHeight(){return this.tankImage.getHeight();}
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -112,8 +120,12 @@ public class Tank{
         if(bulletList.size() > 0){
             for (int i = 0; i < bulletList.size(); i++){
                 bulletList.get(i).update(TankRotationExample.SCREEN_WIDTH, TankRotationExample.SCREEN_HEIGHT);
+                bulletList.get(i).collision(this);
             }
         }
+        updateHitBox();
+        //System.out.println("tankx: " + this.x + "tanky: " + this.y + "hbx: " + hitBox.x + "hby: " + hitBox.y);
+
 
 
     }
@@ -146,10 +158,17 @@ public class Tank{
     //TODO: the bullet only shoots in x direction, find a way to manage direction for shooting
     //
     private void fire(){
-        Bullet bullet = new Bullet(bulletImage,x,y,1,0);
+        Bullet bullet = new Bullet(bulletImage,x + 80 ,y,1,0);
         bulletList.add(bullet);
     }
 
+    public void updateHitBox(){
+        hitBox.x = this.x;
+        hitBox.y = this.y;
+    }
+    public Rectangle getHitBox(){
+        return hitBox;
+    }
 
 
 

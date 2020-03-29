@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 
 import static javax.imageio.ImageIO.read;
@@ -33,6 +34,8 @@ public class TankRotationExample extends JPanel  {
     private JFrame jFrame;
     private Tank tankOne;
     private Tank tankTwo;
+    public Collisions collisionManager;
+    public ArrayList<Bullet> bulletList;
 
 
 
@@ -44,6 +47,7 @@ public class TankRotationExample extends JPanel  {
             while (true) {
                 tankExample.tankOne.update();
                 tankExample.tankTwo.update();
+                tankExample.collisionManager.TankvTank(tankExample.tankOne,tankExample.tankTwo);
                 tankExample.repaint();
               //  System.out.println(tankExample.t1);
                 Thread.sleep(1000 / 144);
@@ -59,6 +63,8 @@ public class TankRotationExample extends JPanel  {
         this.jFrame = new JFrame("Tank Rotation");
         this.world = new BufferedImage(TankRotationExample.SCREEN_WIDTH, TankRotationExample.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
+        collisionManager = new Collisions();
+        bulletList = new ArrayList<Bullet>();
 
         try {
 
@@ -88,8 +94,8 @@ public class TankRotationExample extends JPanel  {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-        tankOne = new Tank(200, 200, 0, 0, 0, tankImage);
-        tankTwo = new Tank(800, 200, 0, 0, 180, tankImage);
+        tankOne = new Tank(200, 200, 0, 0, 0, tankImage,this);
+        tankTwo = new Tank(800, 200, 0, 0, 180, tankImage,this);
 
 
         TankControl tankOneControl = new TankControl(tankOne, KeyEvent.VK_UP,
