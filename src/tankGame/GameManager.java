@@ -17,6 +17,7 @@ public class GameManager extends JPanel {
     private Tank tankOne;
     private Tank tankTwo;
     public static ArrayList<Bullet> bulletList;
+    private  Collisions collisions;
 
     public static void main(String[] args){
         GameManager gameManager = new GameManager();
@@ -30,8 +31,10 @@ public class GameManager extends JPanel {
                 if(bulletList.size() > 0){
                     for (int i = 0; i < bulletList.size(); i++){
                         bulletList.get(i).update(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT);
+                        gameManager.collisions.checkCollisions(bulletList.get(i),gameManager.tankOne,gameManager.tankTwo);
                     }
                 }
+                gameManager.collisions.checkCollisions(gameManager.tankOne, gameManager.tankTwo);
 
                 gameManager.repaint();
                 //  System.out.println(tankExample.t1);
@@ -47,6 +50,7 @@ public class GameManager extends JPanel {
         this.world = new BufferedImage(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
         bulletList = new ArrayList<Bullet>();
+        collisions = new Collisions();
 
         try {
 
@@ -118,7 +122,9 @@ public class GameManager extends JPanel {
             }
         }
         this.tankOne.drawImage(buffer);
+        this.tankOne.getHealthBar().draw(buffer,null);
         this.tankTwo.drawImage(buffer);
+        this.tankTwo.getHealthBar().draw(buffer,null);
 
         g2.drawImage(world,0,0,null);
 

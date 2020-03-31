@@ -13,6 +13,7 @@ public class Bullet extends GameObject{
     private int xSpeed;
     private int ySpeed;
     private int angle;
+    private Hitbox hitbox;
 
     boolean destroy = false;
 
@@ -24,12 +25,25 @@ public class Bullet extends GameObject{
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.angle = angle;
+        hitbox = new Hitbox(this);
+    }
+
+    public Hitbox getHitbox(){return this.hitbox;}
+
+    public void disableHitbox(){
+        this.hitbox.hitbox.height = 0;
+        this.hitbox.hitbox.width = 0;
+    }
+
+    public void setDestroy(Boolean set){
+        destroy = set;
     }
 
     public void update(int w, int h){
         if(y < h-88 && y > 0 && x > 0 && x < w-88 && destroy == false){
             x = x + xSpeed;
             y = y + ySpeed;
+            hitbox.update(this);
             //System.out.println("Bullet x: " + x + "Bullet y: " + y);
         }
         else{

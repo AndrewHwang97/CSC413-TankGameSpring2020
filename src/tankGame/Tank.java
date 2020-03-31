@@ -20,34 +20,49 @@ public class Tank {
 
     private BufferedImage tankImage;
     private BufferedImage bulletImage;
+    private BufferedImage healthFullImage;
+    private BufferedImage health2Image;
+    private BufferedImage health1Image;
+    private BufferedImage healthNoImage;
     private boolean UpPressed;
     private boolean DownPressed;
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean shootPressed;
+    private int hp = 3;
+    private boolean destroyed;
 
     ArrayList<Bullet> bulletList;
+    private  Hitbox hitBox;
+    private HealthBar healthBar;
 
     Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage, GameManager game) {
+
         this.x = x;
         this.y = y;
         this.vx = vx;
         this.vy = vy;
         this.tankImage = tankImage;
         this.angle = angle;
+        this.destroyed = false;
         bulletList = game.bulletList;
-
+        hitBox = new Hitbox(this, this.tankImage);
         try{
             bulletImage = ImageIO.read(Tank.class.getClassLoader().getResource("Rocket.gif"));
+            healthFullImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_full.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage() + "resource not found");
         }
+        healthBar = new HealthBar(healthFullImage,this.x - 50,this.y - 50);
 
     }
     public int getX(){return x;}
     public int getY(){return  y;}
     public int getWidth(){return this.tankImage.getWidth();}
     public int getHeight(){return this.tankImage.getHeight();}
+    public Hitbox getHitBox(){return this.hitBox;}
+
+    public void takeDamage() {this.hp -= 1; System.out.println(this.hp);}
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -85,26 +100,44 @@ public class Tank {
         this.LeftPressed = false;
     }
 
+    BufferedImage getImage(){
+        return tankImage;
+    }
+
+    public HealthBar getHealthBar(){return this.healthBar;}
+
     public void update() throws IOException {
-        if (this.UpPressed) {
-            this.moveForwards();
-        }
-        if (this.DownPressed) {
-            this.moveBackwards();
+        if (this.destroyed == false){
+            if (this.UpPressed) {
+                this.moveForwards();
+            }
+            if (this.DownPressed) {
+                this.moveBackwards();
+            }
+
+            if (this.LeftPressed) {
+                this.rotateLeft();
+            }
+            if (this.RightPressed) {
+                this.rotateRight();
+            }
+            if (this.shootPressed) {
+                this.fire();
+                untoggleShootPressed();
+            }
+            vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
+            vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
+
+            hitBox.update(this);
+
+            healthBar.updateSprite(hp, this);
+
+
+            if(hp < 1){
+                destroyTank();
+            }
         }
 
-        if (this.LeftPressed) {
-            this.rotateLeft();
-        }
-        if (this.RightPressed) {
-            this.rotateRight();
-        }
-        if (this.shootPressed) {
-            this.fire();
-            untoggleShootPressed();
-        }
-        vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
-        vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
     }
 
     private void rotateLeft() {
@@ -131,7 +164,7 @@ public class Tank {
         checkBorder();
     }
     private void fire() throws IOException {
-        System.out.println(x +" " + y );
+        //System.out.println(x +" " + y );
         Bullet bullet = new Bullet(bulletImage, x+vx*30 ,y+vy*30,vx,vy,angle);
         bulletList.add(bullet);
     }
@@ -149,6 +182,16 @@ public class Tank {
         if (y >= GameManager.SCREEN_HEIGHT - 80) {
             y = GameManager.SCREEN_HEIGHT - 80;
         }
+    }
+
+    public void pushBack(){
+        this.x = x-vx;
+        this.y = x-vy;
+    }
+
+    private void destroyTank(){
+        System.out.println("destroyed");
+        destroyed = true;
     }
 
     @Override
