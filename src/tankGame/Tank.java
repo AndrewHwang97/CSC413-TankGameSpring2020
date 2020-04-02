@@ -14,6 +14,10 @@ public class Tank {
     private int vy;
     private int angle;
 
+    private int spawnX;
+    private int spawnY;
+    private int spawnAngle;
+
     private final int R = 2;
     private final int ROTATION_SPEED = 4;
 
@@ -35,6 +39,7 @@ public class Tank {
     ArrayList<Bullet> bulletList;
     private  Hitbox hitBox;
     private HealthBar healthBar;
+    private int noLives;
 
     Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage, GameManager game) {
 
@@ -42,18 +47,24 @@ public class Tank {
         this.y = y;
         this.vx = vx;
         this.vy = vy;
+        this.spawnX = x;
+        this.spawnY = y;
+        this.spawnAngle = angle;
         this.tankImage = tankImage;
         this.angle = angle;
         this.destroyed = false;
         bulletList = game.bulletList;
         hitBox = new Hitbox(this, this.tankImage);
         try{
+
             bulletImage = ImageIO.read(Tank.class.getClassLoader().getResource("Rocket.gif"));
+
             healthFullImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_full.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage() + "resource not found");
         }
         healthBar = new HealthBar(healthFullImage,this.x - 50,this.y - 50);
+        this.noLives = 3;
 
     }
     public int getX(){return x;}
@@ -134,7 +145,10 @@ public class Tank {
 
 
             if(hp < 1){
-                destroyTank();
+                if(noLives < 1)
+                    destroyTank();
+                else
+                    respawn();
             }
         }
 
@@ -194,6 +208,16 @@ public class Tank {
         destroyed = true;
     }
 
+    private void respawn(){
+        System.out.println("respawned       number of lives remaining: " + noLives);
+        this.hp = 3;
+        this.x = spawnX;
+        this.y = spawnY;
+        this.angle = spawnAngle;
+        noLives--;
+    }
+
+    public int getNumberofLivesRemaining(){return noLives;}
     @Override
     public String toString() {
         return "x=" + x + ", y=" + y + ", angle=" + angle;

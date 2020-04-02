@@ -19,6 +19,7 @@ public class GameManager extends JPanel {
     public static ArrayList<Bullet> bulletList;
     private  Collisions collisions;
 
+
     public static void main(String[] args){
         GameManager gameManager = new GameManager();
         gameManager.init();
@@ -47,6 +48,7 @@ public class GameManager extends JPanel {
 
     private void init() {
         this.jFrame = new JFrame("Tank Game");
+
         this.world = new BufferedImage(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
         bulletList = new ArrayList<Bullet>();
@@ -111,7 +113,9 @@ public class GameManager extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
+        Font font = new Font("Verdana",Font.BOLD,12);
         Graphics2D g2 = (Graphics2D) g;
+        g2.setFont(font);
         super.paintComponent(g2);
         buffer = world.createGraphics();
         buffer.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
@@ -126,7 +130,10 @@ public class GameManager extends JPanel {
         this.tankTwo.drawImage(buffer);
         this.tankTwo.getHealthBar().draw(buffer,null);
 
+
         g2.drawImage(world,0,0,null);
+        g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,15);
+        g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 1100,15);
 
     }
 
