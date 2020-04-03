@@ -18,6 +18,7 @@ public class GameManager extends JPanel {
     private Tank tankTwo;
     public static ArrayList<Bullet> bulletList;
     private  Collisions collisions;
+    BufferedImage worldImgTest;
 
 
     public static void main(String[] args){
@@ -53,6 +54,7 @@ public class GameManager extends JPanel {
         BufferedImage tankImage = null;
         bulletList = new ArrayList<Bullet>();
         collisions = new Collisions();
+        worldImgTest = null;
 
         try {
 
@@ -76,6 +78,9 @@ public class GameManager extends JPanel {
              */
             //Using class loaders to read in resources
             tankImage = read(GameManager.class.getClassLoader().getResource("tank1.png"));
+            worldImgTest = read(GameManager.class.getClassLoader().getResource("BackgroundTest.png"));
+
+
             //Using file objects to read in resources.
             //tankImage = read(new File("tank1.png"));
 
@@ -113,12 +118,18 @@ public class GameManager extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        Font font = new Font("Verdana",Font.BOLD,12);
+
+        Font font = new Font("Verdana",Font.BOLD,30);
+
+
         Graphics2D g2 = (Graphics2D) g;
         g2.setFont(font);
         super.paintComponent(g2);
         buffer = world.createGraphics();
         buffer.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        buffer.drawImage(worldImgTest,0,0,null);
+
+
 
         if(this.bulletList.size() > 0){
             for (int i = 0; i < this.bulletList.size(); i++){
@@ -132,8 +143,9 @@ public class GameManager extends JPanel {
 
 
         g2.drawImage(world,0,0,null);
-        g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,15);
-        g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 1100,15);
+
+        g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,30);
+        g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 950,30);
 
     }
 
