@@ -30,4 +30,9 @@ public class Hitbox {
         this.hitbox.x = obj.x;
         this.hitbox.y = obj.y;
     }
+
+    public void disableHitbox(){
+        this.hitbox.width = 0;
+        this.hitbox.height = 0;
+    }
 }

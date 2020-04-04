@@ -7,6 +7,7 @@ public class Collisions {
     Rectangle hbTank1;
     Rectangle hbTank2;
     Rectangle hbOther;
+    Rectangle hbWall;
     public Collisions(){
 
     }
@@ -51,6 +52,18 @@ public class Collisions {
             System.out.println("boom");
             t2.takeDamage();
         }
+    }
+
+    public void checkCollisions(Bullet bullet, Wall wall){
+        hbOther = bullet.getHitbox().hitbox;
+        hbWall = wall.getHitbox().hitbox;
+
+        if(hbOther.intersects(hbWall)){
+            System.out.println("WALL HIT");
+            wall.wallHit();
+            bullet.setDestroy(true);
+        }
+
     }
 
 }

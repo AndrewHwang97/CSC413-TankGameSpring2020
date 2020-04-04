@@ -19,6 +19,8 @@ public class GameManager extends JPanel {
     public static ArrayList<Bullet> bulletList;
     private  Collisions collisions;
     BufferedImage worldImgTest;
+    Map_Standard map1;
+    ArrayList<Wall> mapBreakableWalls;
 
 
     public static void main(String[] args){
@@ -34,6 +36,9 @@ public class GameManager extends JPanel {
                     for (int i = 0; i < bulletList.size(); i++){
                         bulletList.get(i).update(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT);
                         gameManager.collisions.checkCollisions(bulletList.get(i),gameManager.tankOne,gameManager.tankTwo);
+                        for(int j=0; j < gameManager.mapBreakableWalls.size(); j++){
+                            gameManager.collisions.checkCollisions(bulletList.get(i), gameManager.mapBreakableWalls.get(j));
+                        }
                     }
                 }
                 gameManager.collisions.checkCollisions(gameManager.tankOne, gameManager.tankTwo);
@@ -55,6 +60,8 @@ public class GameManager extends JPanel {
         bulletList = new ArrayList<Bullet>();
         collisions = new Collisions();
         worldImgTest = null;
+        map1 = new Map_Standard();
+        mapBreakableWalls = map1.getBreakableWallsLeft();
 
         try {
 
@@ -127,7 +134,8 @@ public class GameManager extends JPanel {
         super.paintComponent(g2);
         buffer = world.createGraphics();
         buffer.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
-        buffer.drawImage(worldImgTest,0,0,null);
+        //buffer.drawImage(worldImgTest,0,0,null);
+        map1.draw(buffer,null);
 
 
 
