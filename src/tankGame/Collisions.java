@@ -62,6 +62,7 @@ public class Collisions {
             System.out.println("WALL HIT");
             wall.wallHit();
             bullet.setDestroy(true);
+            bullet.disableHitbox();
         }
 
     }
