@@ -56,6 +56,8 @@ public class Bullet extends GameObject{
             AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
             rotation.rotate(Math.toRadians(angle), this.sprite.getWidth(null) / 2.0, this.sprite.getHeight(null) / 2.0);
             Graphics2D g2d = (Graphics2D) g;
+            g2d.setColor(Color.CYAN);
+            g2d.drawRect(x,y,this.sprite.getWidth(null),this.sprite.getHeight(null));
             g2d.drawImage(this.sprite,rotation,obs);
 
         }

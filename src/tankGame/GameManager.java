@@ -3,7 +3,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 import static javax.imageio.ImageIO.read;
@@ -19,29 +21,30 @@ public class GameManager extends JPanel {
     public static ArrayList<Bullet> bulletList;
     private  Collisions collisions;
     BufferedImage worldImgTest;
-    Map_Standard map1;
-    ArrayList<Wall> mapBreakableWalls;
+    ArrayList<Walls> walls;
 
 
     public static void main(String[] args){
         GameManager gameManager = new GameManager();
         gameManager.init();
         try{
-
             while(true){
                 gameManager.tankOne.update();
-
                 gameManager.tankTwo.update();
                 if(bulletList.size() > 0){
                     for (int i = 0; i < bulletList.size(); i++){
                         bulletList.get(i).update(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT);
                         gameManager.collisions.checkCollisions(bulletList.get(i),gameManager.tankOne,gameManager.tankTwo);
-                        for(int j=0; j < gameManager.mapBreakableWalls.size(); j++){
-                            gameManager.collisions.checkCollisions(bulletList.get(i), gameManager.mapBreakableWalls.get(j));
+                        for(int j=0; j < gameManager.walls.size(); j++){
+                            gameManager.collisions.checkCollisions(bulletList.get(i), gameManager.walls.get(j));
                         }
                     }
                 }
                 gameManager.collisions.checkCollisions(gameManager.tankOne, gameManager.tankTwo);
+
+                for(int j=0; j < gameManager.walls.size(); j++){
+                    gameManager.collisions.checkCollisions(gameManager.tankOne, gameManager.tankTwo,gameManager.walls.get(j));
+                }
 
                 gameManager.repaint();
                 //  System.out.println(tankExample.t1);
@@ -57,11 +60,12 @@ public class GameManager extends JPanel {
 
         this.world = new BufferedImage(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
+        BufferedImage breakWall = null;
+        BufferedImage unBreakWall = null;
         bulletList = new ArrayList<Bullet>();
         collisions = new Collisions();
         worldImgTest = null;
-        map1 = new Map_Standard();
-        mapBreakableWalls = map1.getBreakableWallsLeft();
+        walls = new ArrayList<Walls>();
 
         try {
 
@@ -85,7 +89,39 @@ public class GameManager extends JPanel {
              */
             //Using class loaders to read in resources
             tankImage = read(GameManager.class.getClassLoader().getResource("tank1.png"));
+            unBreakWall = read(GameManager.class.getClassLoader().getResource("unBreakableWall.gif"));
+            breakWall = read(GameManager.class.getClassLoader().getResource("BreakableWall2.gif"));
             worldImgTest = read(GameManager.class.getClassLoader().getResource("BackgroundTest.png"));
+
+            InputStreamReader isr = new InputStreamReader(GameManager.class.getClassLoader().getResourceAsStream("maps/map1"));
+            BufferedReader mapReader = new BufferedReader(isr);
+
+            String row = mapReader.readLine();
+            if(row == null){
+                throw new IOException("no new data on ifle");
+            }
+            String[] mapInfo = row.split("\t");
+            int numCols = Integer.parseInt(mapInfo[0]);
+            int numRows = Integer.parseInt(mapInfo[1]);
+
+            for(int currRow = 0; currRow < numRows; currRow++){
+                row = mapReader.readLine();
+                mapInfo = row.split("\t");
+                for(int currCol = 0; currCol < numCols; currCol++){
+                    switch (mapInfo[currCol]){
+                        case "2":
+                            BreakableWall br = new BreakableWall(breakWall,currCol*30,currRow*30);
+                            this.walls.add(br);
+                            break;
+                        case "3":
+                        case "9":
+                            UnbreakableWall ubr = new UnbreakableWall(unBreakWall,currCol*30,currRow*30);
+                            this.walls.add(ubr);
+                            break;
+                    }
+                }
+            }
+
 
 
             //Using file objects to read in resources.
@@ -96,8 +132,8 @@ public class GameManager extends JPanel {
         }
 
         //TODO: add tank initializer here
-        tankOne = new Tank(200, 200, 0, 0, 0, tankImage,this);
-        tankTwo = new Tank(800, 200, 0, 0, 180, tankImage,this);
+        tankOne = new Tank(100, 200, 0, 0, 0, tankImage,this);
+        tankTwo = new Tank(900, 200, 0, 0, 180, tankImage,this);
 
         //TODO: add tank controls here
         TankControl tankOneControl = new TankControl(tankOne, KeyEvent.VK_UP,
@@ -133,9 +169,11 @@ public class GameManager extends JPanel {
         g2.setFont(font);
         super.paintComponent(g2);
         buffer = world.createGraphics();
+        buffer.setColor(Color.BLACK);
         buffer.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        this.walls.forEach(wall -> wall.draw(buffer,null));
         //buffer.drawImage(worldImgTest,0,0,null);
-        map1.draw(buffer,null);
+        //map1.draw(buffer,null);
 
 
 

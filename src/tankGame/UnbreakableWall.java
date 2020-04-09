@@ -1,25 +1,22 @@
 package tankGame;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
-public class Wall extends GameObject {
+public class UnbreakableWall extends Walls{
     int x;
     int y;
     int width;
     int height;
-    int hp;
+    //int hp;
     Image sprite;
     Hitbox hb;
     boolean destroy;
-    public Wall(Image sprite, int x, int y){
+    public UnbreakableWall(Image sprite, int x, int y){
         super(sprite,x,y);
         this.x = x;
         this.y = y;
-        hp = 1;
+       // hp = 1;
         destroy = false;
 
         this.sprite = sprite;
@@ -30,13 +27,7 @@ public class Wall extends GameObject {
 
     }
     public Hitbox getHitbox(){return hb;}
-    public void wallHit(){
-        hp--;
-        if(hp < 1){
-            destroy = true;
-            hb.disableHitbox();
-        }
-    }
+    public void wallHit(){}
 
     public void draw(Graphics g, ImageObserver obs){
         if(!destroy){

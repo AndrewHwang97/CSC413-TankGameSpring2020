@@ -35,11 +35,15 @@ public class Tank {
     private boolean shootPressed;
     private int hp = 3;
     private boolean destroyed;
+    private boolean rotationLock;
+
+    private boolean debug;
 
     ArrayList<Bullet> bulletList;
     private  Hitbox hitBox;
     private HealthBar healthBar;
     private int noLives;
+
 
     Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage, GameManager game) {
 
@@ -65,12 +69,20 @@ public class Tank {
         }
         healthBar = new HealthBar(healthFullImage,this.x - 50,this.y - 50);
         this.noLives = 3;
+        this.rotationLock = false;
 
     }
     public int getX(){return x;}
     public int getY(){return  y;}
+    public int getVx(){return vx;}
+    public int getVy(){return vy;}
+    public void setX(int x){this.x=x;}
+    public void setY(int y){this.y = y;}
     public int getWidth(){return this.tankImage.getWidth();}
     public int getHeight(){return this.tankImage.getHeight();}
+    public void setRotationLock(boolean state){this.rotationLock = state;}
+
+    public void setDebug(){this.debug = true;}
     public Hitbox getHitBox(){return this.hitBox;}
 
     public void takeDamage() {this.hp -= 1; System.out.println(this.hp);}
@@ -119,17 +131,21 @@ public class Tank {
 
     public void update() throws IOException {
         if (this.destroyed == false){
-            if (this.UpPressed) {
+            if (this.UpPressed ) {
                 this.moveForwards();
             }
+
             if (this.DownPressed) {
                 this.moveBackwards();
+                rotationLock = false;
             }
 
-            if (this.LeftPressed) {
+
+
+            if (this.LeftPressed && rotationLock == false) {
                 this.rotateLeft();
             }
-            if (this.RightPressed) {
+            if (this.RightPressed && rotationLock == false) {
                 this.rotateRight();
             }
             if (this.shootPressed) {
@@ -139,9 +155,13 @@ public class Tank {
             vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
             vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
 
+            //if(debug)
+            //System.out.println(fSpeed + "  " + bSpeed);
+
             hitBox.update(this);
 
             healthBar.updateSprite(hp, this);
+
 
 
             if(hp < 1){
@@ -179,7 +199,7 @@ public class Tank {
     }
     private void fire() throws IOException {
         //System.out.println(x +" " + y );
-        Bullet bullet = new Bullet(bulletImage, x+vx*30 ,y+vy*30,vx,vy,angle);
+        Bullet bullet = new Bullet(bulletImage, x+vx*30 ,y+vy*30,vx*2,vy*2,angle);
         bulletList.add(bullet);
     }
 
@@ -228,6 +248,8 @@ public class Tank {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.tankImage.getWidth() / 2.0, this.tankImage.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.CYAN);
+        g2d.drawRect(x,y,this.tankImage.getWidth(),this.tankImage.getHeight());
         g2d.drawImage(this.tankImage, rotation, null);
     }
 }

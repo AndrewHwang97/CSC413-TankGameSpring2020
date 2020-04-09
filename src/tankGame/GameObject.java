@@ -11,6 +11,7 @@ public class GameObject {
     protected int height;
     protected Image sprite;
     //protected Rectangle hitBox;
+    Hitbox hb;
 
     public GameObject(Image sprite,int x, int y){
         this.sprite = sprite;
@@ -18,12 +19,14 @@ public class GameObject {
         this.y = y;
         this.width = sprite.getWidth(null);
         this.height = sprite.getHeight(null);
+        hb = new Hitbox(this);
     }
 
     public int getX(){
         return this.x;
     }
     public int getY(){return this.y;}
+    public Hitbox getHitbox(){return hb;}
 
     public int getWidth(){return this.width;}
     public int getHeight(){return this.height;}

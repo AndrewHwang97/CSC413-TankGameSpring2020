@@ -23,8 +23,16 @@ public class Collisions {
         hbTank2 = t2.getHitBox().hitbox;
 
         if(hbTank1.intersects(hbTank2)){
-            System.out.println("collide");
+            t1.setX(t1.getX() - t1.getVx());
+            t1.setY(t1.getY()-t1.getVy());
+
         }
+
+        if(hbTank2.intersects(hbTank1)){
+            t2.setX(t2.getX() - t2.getVx());
+            t2.setY(t2.getY()-t2.getVy());
+        }
+
     }
 
     /**
@@ -54,7 +62,7 @@ public class Collisions {
         }
     }
 
-    public void checkCollisions(Bullet bullet, Wall wall){
+    public void checkCollisions(Bullet bullet, Walls wall){
         hbOther = bullet.getHitbox().hitbox;
         hbWall = wall.getHitbox().hitbox;
 
@@ -63,6 +71,24 @@ public class Collisions {
             wall.wallHit();
             bullet.setDestroy(true);
             bullet.disableHitbox();
+        }
+
+    }
+    public void checkCollisions(Tank t1,Tank t2 ,Walls wall){
+        hbTank1 = t1.getHitBox().hitbox;
+        hbTank2 = t2.getHitBox().hitbox;
+        hbWall = wall.getHitbox().hitbox;
+
+        if(hbTank1.intersects(hbWall)){
+            t1.setX(t1.getX() - t1.getVx());
+            t1.setY(t1.getY()-t1.getVy());
+            t1.setRotationLock(true);
+        }
+
+        if(hbTank2.intersects(hbWall)){
+            t2.setX(t2.getX() - t2.getVx());
+            t2.setY(t2.getY()-t2.getVy());
+            t2.setRotationLock(true);
         }
 
     }

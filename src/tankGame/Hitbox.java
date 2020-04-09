@@ -15,6 +15,12 @@ public class Hitbox {
         hitbox = new Rectangle(x,y,obj.sprite.getWidth(null),obj.sprite.getHeight(null));
     }
 
+    Hitbox(Walls obj){
+        this.x = obj.x;
+        this.y = obj.y;
+        hitbox = new Rectangle(x,y,obj.sprite.getWidth(null),obj.sprite.getHeight(null));
+    }
+
     Hitbox(Tank obj, BufferedImage image){
         this.x = obj.getX();
         this.y = obj.getY();
