@@ -72,8 +72,8 @@ public class Tank {
         this.rotationLock = false;
 
     }
-    public int getX(){return x;}
-    public int getY(){return  y;}
+    public int getX(){return this.x;}
+    public int getY(){return  this.y;}
     public int getVx(){return vx;}
     public int getVy(){return vy;}
     public void setX(int x){this.x=x;}
@@ -207,14 +207,14 @@ public class Tank {
         if (x < 30) {
             x = 30;
         }
-        if (x >= GameManager.SCREEN_WIDTH - 88) {
-            x = GameManager.SCREEN_WIDTH - 88;
+        if (x >= GameManager.WORLD_WIDTH - 88) {
+            x = GameManager.WORLD_WIDTH - 88;
         }
         if (y < 40) {
             y = 40;
         }
-        if (y >= GameManager.SCREEN_HEIGHT - 80) {
-            y = GameManager.SCREEN_HEIGHT - 80;
+        if (y >= GameManager.WORLD_HEIGHT - 80) {
+            y = GameManager.WORLD_HEIGHT - 80;
         }
     }
 

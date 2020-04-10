@@ -13,6 +13,8 @@ import static javax.imageio.ImageIO.read;
 public class GameManager extends JPanel {
     public static final int SCREEN_WIDTH = 1280;
     public static final int SCREEN_HEIGHT = 960;
+    public static final int WORLD_WIDTH = 2010;
+    public static final int WORLD_HEIGHT = 2010;
     private BufferedImage world;
     private Graphics2D buffer;
     private JFrame jFrame;
@@ -58,7 +60,7 @@ public class GameManager extends JPanel {
     private void init() {
         this.jFrame = new JFrame("Tank Game");
 
-        this.world = new BufferedImage(GameManager.SCREEN_WIDTH, GameManager.SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
+        this.world = new BufferedImage(GameManager.WORLD_WIDTH, GameManager.WORLD_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
         BufferedImage breakWall = null;
         BufferedImage unBreakWall = null;
@@ -132,8 +134,8 @@ public class GameManager extends JPanel {
         }
 
         //TODO: add tank initializer here
-        tankOne = new Tank(100, 200, 0, 0, 0, tankImage,this);
-        tankTwo = new Tank(900, 200, 0, 0, 180, tankImage,this);
+        tankOne = new Tank(100, 500, 0, 0, 0, tankImage,this);
+        tankTwo = new Tank(900, 500, 0, 0, 180, tankImage,this);
 
         //TODO: add tank controls here
         TankControl tankOneControl = new TankControl(tankOne, KeyEvent.VK_UP,
@@ -187,9 +189,13 @@ public class GameManager extends JPanel {
         this.tankTwo.drawImage(buffer);
         this.tankTwo.getHealthBar().draw(buffer,null);
 
-
-        g2.drawImage(world,0,0,null);
-
+        BufferedImage leftHalf =  world.getSubimage(this.tankOne.getX(),this.tankOne.getY(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
+        BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getX(),this.tankTwo.getY(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
+        BufferedImage miniMap = world.getSubimage(0,0,GameManager.WORLD_WIDTH,GameManager.WORLD_HEIGHT);
+        g2.drawImage(leftHalf,0,0,null);
+        g2.drawImage(rightHalf,GameManager.SCREEN_WIDTH/2+4,0,null);
+        g2.scale(.10,.10);
+        g2.drawImage(miniMap,200,200,null);
         g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,30);
         g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 950,30);
 
