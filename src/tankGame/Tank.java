@@ -44,6 +44,8 @@ public class Tank {
     private HealthBar healthBar;
     private int noLives;
 
+    private int camerax;
+    private int cameray;
 
     Tank(int x, int y, int vx, int vy, int angle, BufferedImage tankImage, GameManager game) {
 
@@ -71,11 +73,14 @@ public class Tank {
         this.noLives = 3;
         this.rotationLock = false;
 
+
     }
     public int getX(){return this.x;}
     public int getY(){return  this.y;}
     public int getVx(){return vx;}
     public int getVy(){return vy;}
+    public  int getCamerax(){return camerax;}
+    public int getCameray(){return cameray;}
     public void setX(int x){this.x=x;}
     public void setY(int y){this.y = y;}
     public int getWidth(){return this.tankImage.getWidth();}
@@ -156,7 +161,7 @@ public class Tank {
             vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
 
             //if(debug)
-            //System.out.println(fSpeed + "  " + bSpeed);
+           // System.out.println("cam x position: " + camerax + "   " + "cam y position"+cameray  + "       " + this.x + "       " + this.y);
 
             hitBox.update(this);
 
@@ -171,6 +176,10 @@ public class Tank {
                     respawn();
             }
         }
+
+        this.camerax = this.x - GameManager.SCREEN_WIDTH / 4;
+        this.cameray = this.y - GameManager.SCREEN_HEIGHT / 2;
+        checkCamBorder();
 
     }
 
@@ -218,6 +227,21 @@ public class Tank {
         }
     }
 
+    private void checkCamBorder() {
+
+        if(camerax <= 0)
+            camerax = 0;
+        if(cameray <= 0)
+            cameray = 0;
+
+        if (camerax  + GameManager.SCREEN_WIDTH / 2 >= GameManager.WORLD_WIDTH - 88) {
+            camerax = GameManager.WORLD_WIDTH  - GameManager.SCREEN_WIDTH / 2 ;
+        }
+
+       if (cameray  + GameManager.SCREEN_HEIGHT >= GameManager.WORLD_HEIGHT ) {
+            cameray = GameManager.WORLD_HEIGHT - 2 - GameManager.WORLD_HEIGHT / 2;
+        }
+    }
     public void pushBack(){
         this.x = x-vx;
         this.y = x-vy;

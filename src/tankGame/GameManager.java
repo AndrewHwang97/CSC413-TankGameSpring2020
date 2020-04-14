@@ -134,8 +134,9 @@ public class GameManager extends JPanel {
         }
 
         //TODO: add tank initializer here
-        tankOne = new Tank(100, 500, 0, 0, 0, tankImage,this);
+        tankOne = new Tank(300, 500, 0, 0, 0, tankImage,this);
         tankTwo = new Tank(900, 500, 0, 0, 180, tankImage,this);
+
 
         //TODO: add tank controls here
         TankControl tankOneControl = new TankControl(tankOne, KeyEvent.VK_UP,
@@ -189,13 +190,14 @@ public class GameManager extends JPanel {
         this.tankTwo.drawImage(buffer);
         this.tankTwo.getHealthBar().draw(buffer,null);
 
-        BufferedImage leftHalf =  world.getSubimage(this.tankOne.getX(),this.tankOne.getY(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
-        BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getX(),this.tankTwo.getY(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
-        BufferedImage miniMap = world.getSubimage(0,0,GameManager.WORLD_WIDTH,GameManager.WORLD_HEIGHT);
+        BufferedImage leftHalf =  world.getSubimage(this.tankOne.getCamerax() ,this.tankOne.getCameray()  ,GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
+        //BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getX() - SCREEN_WIDTH / 4,this.tankTwo.getY() - SCREEN_HEIGHT / 4,GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
+        BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getCamerax() ,this.tankTwo.getCameray(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
+        BufferedImage miniMap = world.getSubimage(0 ,0,GameManager.WORLD_WIDTH ,GameManager.WORLD_HEIGHT);
         g2.drawImage(leftHalf,0,0,null);
         g2.drawImage(rightHalf,GameManager.SCREEN_WIDTH/2+4,0,null);
         g2.scale(.10,.10);
-        g2.drawImage(miniMap,200,200,null);
+        g2.drawImage(miniMap,SCREEN_WIDTH  * 4,200,null);
         g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,30);
         g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 950,30);
 
