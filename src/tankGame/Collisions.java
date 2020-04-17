@@ -13,6 +13,7 @@ public class Collisions {
 
     }
 
+    public SoundManager getSoundManager(){return soundManager;}
     /**
      * This function detects whether a tank has collided with another tank
      * if a tank collides with another tank, we want to push them back

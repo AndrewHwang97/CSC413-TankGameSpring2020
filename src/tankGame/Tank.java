@@ -89,7 +89,7 @@ public class Tank {
     public boolean getEndPressed(){return this.endPressed;}
     public boolean getDestroyed(){ return this.destroyed;}
     public void setRotationLock(boolean state){this.rotationLock = state;}
-
+    public SoundManager getSoundManager(){return soundManager;}
     public void setDebug(){this.debug = true;}
     public Hitbox getHitBox(){return this.hitBox;}
 

@@ -61,6 +61,10 @@ public class GameManager extends JPanel {
                 if(gameManager.tankOne.getDestroyed() == true || gameManager.tankTwo.getDestroyed() == true){
                     gameManager.gameOver = true;
                     if(gameManager.tankOne.getEndPressed()|| gameManager.tankTwo.getEndPressed()){
+                        gameManager.soundManager.close();
+                        gameManager.collisions.soundManager.close();
+                        gameManager.tankOne.getSoundManager().close();
+                        gameManager.tankTwo.getSoundManager().close();
                         System.exit(1);
                     }
 
