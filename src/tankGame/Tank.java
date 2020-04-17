@@ -33,9 +33,11 @@ public class Tank {
     private boolean RightPressed;
     private boolean LeftPressed;
     private boolean shootPressed;
+    private boolean endPressed = false;
     private int hp = 3;
     private boolean destroyed;
     private boolean rotationLock;
+    private SoundManager soundManager;
 
     private boolean debug;
 
@@ -63,7 +65,7 @@ public class Tank {
         hitBox = new Hitbox(this, this.tankImage);
         try{
 
-            bulletImage = ImageIO.read(Tank.class.getClassLoader().getResource("Rocket.gif"));
+            bulletImage = ImageIO.read(Tank.class.getClassLoader().getResource("rocket.png"));
 
             healthFullImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_full.png"));
         } catch (IOException e) {
@@ -72,6 +74,7 @@ public class Tank {
         healthBar = new HealthBar(healthFullImage,this.x - 50,this.y - 50);
         this.noLives = 3;
         this.rotationLock = false;
+        soundManager = new SoundManager();
 
 
     }
@@ -83,8 +86,8 @@ public class Tank {
     public int getCameray(){return cameray;}
     public void setX(int x){this.x=x;}
     public void setY(int y){this.y = y;}
-    public int getWidth(){return this.tankImage.getWidth();}
-    public int getHeight(){return this.tankImage.getHeight();}
+    public boolean getEndPressed(){return this.endPressed;}
+    public boolean getDestroyed(){ return this.destroyed;}
     public void setRotationLock(boolean state){this.rotationLock = state;}
 
     public void setDebug(){this.debug = true;}
@@ -92,6 +95,7 @@ public class Tank {
 
     public void takeDamage() {this.hp -= 1; System.out.println(this.hp);}
     public void setHp(int hp){this.hp = hp;}
+
 
     void toggleUpPressed() {
         this.UpPressed = true;
@@ -156,7 +160,9 @@ public class Tank {
             }
             if (this.shootPressed) {
                 this.fire();
+                this.soundManager.playSound("Sounds/tankShot.wav");
                 untoggleShootPressed();
+
             }
             vx = (int) Math.round(R * Math.cos(Math.toRadians(angle)));
             vy = (int) Math.round(R * Math.sin(Math.toRadians(angle)));
@@ -175,6 +181,11 @@ public class Tank {
                     destroyTank();
                 else
                     respawn();
+            }
+        }
+        else{
+            if(this.shootPressed){
+                this.endPressed = true;
             }
         }
 
@@ -209,7 +220,7 @@ public class Tank {
     }
     private void fire() throws IOException {
         //System.out.println(x +" " + y );
-        Bullet bullet = new Bullet(bulletImage, x+vx*30 ,y+vy*30,vx*2,vy*2,angle);
+        Bullet bullet = new Bullet(bulletImage, x+vx*20 ,y+vy*20,vx*4,vy*4,angle);
         bulletList.add(bullet);
     }
 
@@ -251,6 +262,7 @@ public class Tank {
     private void destroyTank(){
         System.out.println("destroyed");
         destroyed = true;
+        soundManager.playSound("Sounds/Explosion_large.wav");
     }
 
     private void respawn(){
@@ -273,8 +285,6 @@ public class Tank {
         AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
         rotation.rotate(Math.toRadians(angle), this.tankImage.getWidth() / 2.0, this.tankImage.getHeight() / 2.0);
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.CYAN);
-        g2d.drawRect(x,y,this.tankImage.getWidth(),this.tankImage.getHeight());
         g2d.drawImage(this.tankImage, rotation, null);
     }
 }

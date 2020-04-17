@@ -2,6 +2,7 @@ package tankGame;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.TimeUnit;
 
 public class Hitbox {
     int x;
@@ -9,9 +10,10 @@ public class Hitbox {
     Rectangle hitbox;
     GameObject obj;
 
-    Hitbox(GameObject obj){
+    Hitbox(GameObject obj)  {
         this.x = obj.x;
         this.y = obj.y;
+
         hitbox = new Rectangle(x,y,obj.sprite.getWidth(null),obj.sprite.getHeight(null));
     }
 
@@ -24,7 +26,7 @@ public class Hitbox {
     Hitbox(Tank obj, BufferedImage image){
         this.x = obj.getX();
         this.y = obj.getY();
-        hitbox = new Rectangle(x,y,image.getWidth(),image.getHeight());
+        hitbox = new Rectangle(x,y,image.getWidth() - 20,image.getHeight() - 20);
     }
 
     void update(Tank obj){

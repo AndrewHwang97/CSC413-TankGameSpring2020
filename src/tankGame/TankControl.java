@@ -30,6 +30,9 @@ public class TankControl implements KeyListener {
     @Override
     public void keyTyped(KeyEvent ke) {
         int keyTyped = ke.getKeyCode();
+        if(keyTyped == shoot){
+            this.tank.toggleShootPressed();
+        }
 
     }
 

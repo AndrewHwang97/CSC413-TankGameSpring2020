@@ -8,6 +8,7 @@ public class Collisions {
     Rectangle hbTank2;
     Rectangle hbOther;
     Rectangle hbWall;
+    SoundManager soundManager = new SoundManager();
     public Collisions(){
 
     }
@@ -52,6 +53,7 @@ public class Collisions {
             bullet.setDestroy(true);
             bullet.disableHitbox();
             t1.takeDamage();
+            soundManager.playSound("Sounds/Explosion_small.wav");
         }
 
         if(hbOther.intersects(hbTank2)){
@@ -59,6 +61,7 @@ public class Collisions {
             bullet.disableHitbox();
             System.out.println("boom");
             t2.takeDamage();
+            soundManager.playSound("Sounds/Explosion_small.wav");
         }
     }
 
@@ -71,6 +74,7 @@ public class Collisions {
             wall.wallHit();
             bullet.setDestroy(true);
             bullet.disableHitbox();
+            soundManager.playSound("Sounds/Explosion_small.wav");
         }
 
     }

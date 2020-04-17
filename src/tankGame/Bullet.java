@@ -40,11 +40,10 @@ public class Bullet extends GameObject{
     }
 
     public void update(int w, int h){
-        if(y < h-88 && y > 0 && x > 0 && x < w-88 && destroy == false){
+        if(y < GameManager.WORLD_HEIGHT && y > 0 && x > 0 && x < GameManager.WORLD_WIDTH && destroy == false){
             x = x + xSpeed;
             y = y + ySpeed;
             hitbox.update(this);
-            //System.out.println("Bullet x: " + x + "Bullet y: " + y);
         }
         else{
             this.destroy = true;
@@ -56,8 +55,6 @@ public class Bullet extends GameObject{
             AffineTransform rotation = AffineTransform.getTranslateInstance(x, y);
             rotation.rotate(Math.toRadians(angle), this.sprite.getWidth(null) / 2.0, this.sprite.getHeight(null) / 2.0);
             Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(Color.CYAN);
-            g2d.drawRect(x,y,this.sprite.getWidth(null),this.sprite.getHeight(null));
             g2d.drawImage(this.sprite,rotation,obs);
 
         }

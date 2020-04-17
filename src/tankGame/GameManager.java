@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import static javax.imageio.ImageIO.read;
 
@@ -22,10 +23,12 @@ public class GameManager extends JPanel {
     private Tank tankTwo;
     public static ArrayList<Bullet> bulletList;
     private  Collisions collisions;
+    private SoundManager soundManager;
     BufferedImage worldImgTest;
     ArrayList<Walls> walls;
     ArrayList<HealthPowerup> powerups;
-
+    private boolean gameOver = false;
+    private boolean running = true;
 
     public static void main(String[] args){
         GameManager gameManager = new GameManager();
@@ -54,7 +57,14 @@ public class GameManager extends JPanel {
                 }
 
                 gameManager.repaint();
-                //  System.out.println(tankExample.t1);
+
+                if(gameManager.tankOne.getDestroyed() == true || gameManager.tankTwo.getDestroyed() == true){
+                    gameManager.gameOver = true;
+                    if(gameManager.tankOne.getEndPressed()|| gameManager.tankTwo.getEndPressed()){
+                        System.exit(1);
+                    }
+
+                }
                 Thread.sleep(1000 / 144);
             }
         } catch (InterruptedException | IOException ignored){
@@ -76,6 +86,9 @@ public class GameManager extends JPanel {
         worldImgTest = null;
         walls = new ArrayList<Walls>();
         powerups = new ArrayList<HealthPowerup>();
+        soundManager = new SoundManager();
+        soundManager.playSound("Sounds/Music.wav");
+
 
         try {
 
@@ -104,6 +117,8 @@ public class GameManager extends JPanel {
             breakWall = read(GameManager.class.getClassLoader().getResource("BreakableWall2.gif"));
             worldImgTest = read(GameManager.class.getClassLoader().getResource("bg.png"));
             powerup = read(GameManager.class.getClassLoader().getResource("Shield2.png"));
+
+
 
             InputStreamReader isr = new InputStreamReader(GameManager.class.getClassLoader().getResourceAsStream("maps/map1"));
             BufferedReader mapReader = new BufferedReader(isr);
@@ -148,7 +163,7 @@ public class GameManager extends JPanel {
 
         //TODO: add tank initializer here
         tankOne = new Tank(300, 500, 0, 0, 0, tankImage,this);
-        tankTwo = new Tank(900, 500, 0, 0, 180, tankImage2,this);
+        tankTwo = new Tank(1500, 500, 0, 0, 180, tankImage2,this);
 
 
         //TODO: add tank controls here
@@ -175,10 +190,11 @@ public class GameManager extends JPanel {
         this.jFrame.setVisible(true);
     }
 
+
     @Override
     public void paintComponent(Graphics g) {
 
-        Font font = new Font("Verdana",Font.BOLD,30);
+        Font font = new Font("Verdana",Font.BOLD,250);
 
 
         Graphics2D g2 = (Graphics2D) g;
@@ -190,10 +206,6 @@ public class GameManager extends JPanel {
         buffer.drawImage(worldImgTest,0,0,null);
         this.walls.forEach(wall -> wall.draw(buffer,null));
         this.powerups.forEach(HealthPowerup -> HealthPowerup.draw(buffer,null));
-        //buffer.drawImage(worldImgTest,0,0,null);
-        //map1.draw(buffer,null);
-
-
 
         if(this.bulletList.size() > 0){
             for (int i = 0; i < this.bulletList.size(); i++){
@@ -206,15 +218,19 @@ public class GameManager extends JPanel {
         this.tankTwo.getHealthBar().draw(buffer,null);
 
         BufferedImage leftHalf =  world.getSubimage(this.tankOne.getCamerax() ,this.tankOne.getCameray()  ,GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
-        //BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getX() - SCREEN_WIDTH / 4,this.tankTwo.getY() - SCREEN_HEIGHT / 4,GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
         BufferedImage rightHalf =  world.getSubimage(this.tankTwo.getCamerax() ,this.tankTwo.getCameray(),GameManager.SCREEN_WIDTH/2, GameManager.SCREEN_HEIGHT);
         BufferedImage miniMap = world.getSubimage(0 ,0,GameManager.WORLD_WIDTH ,GameManager.WORLD_HEIGHT);
         g2.drawImage(leftHalf,0,0,null);
-        g2.drawImage(rightHalf,GameManager.SCREEN_WIDTH/2+4,0,null);
+        g2.drawImage(rightHalf,GameManager.SCREEN_WIDTH/2,0,null);
         g2.scale(.10,.10);
         g2.drawImage(miniMap,SCREEN_WIDTH  * 4 + (SCREEN_WIDTH / 4),SCREEN_HEIGHT,null);
-        g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,30);
-        g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 950,30);
+        g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , SCREEN_WIDTH,800);
+        g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , SCREEN_WIDTH * 7,800);
+        if(gameOver){
+            Font endfont = new Font("Verdana",Font.BOLD,500);
+            g2.setFont(endfont);
+            g2.drawString("GAME OVER", SCREEN_WIDTH * 4, SCREEN_HEIGHT * 4);
+        }
 
     }
 
