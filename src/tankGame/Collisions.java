@@ -93,4 +93,19 @@ public class Collisions {
 
     }
 
+    public void checkCollisions (Tank t1, Tank t2, HealthPowerup powerup){
+        hbTank1 = t1.getHitBox().hitbox;
+        hbTank2 = t2.getHitBox().hitbox;
+        hbOther = powerup.getHitbox().hitbox;
+
+        if(hbTank1.intersects(hbOther)){
+            powerup.activate(t1);
+            powerup.destroy();
+        }
+        if(hbTank2.intersects(hbOther)){
+            powerup.activate(t2);
+            powerup.destroy();
+        }
+    }
+
 }

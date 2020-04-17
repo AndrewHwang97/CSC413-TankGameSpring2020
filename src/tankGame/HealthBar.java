@@ -15,6 +15,8 @@ public class HealthBar extends GameObject {
     Image health2Image;
     Image health1Image;
     Image healthNoImage;
+    Image healthShieldFullImage;
+    Image healthShieldHalfImage;
     public HealthBar(Image sprite,int x, int y){
         super(sprite, x, y);
 
@@ -25,6 +27,8 @@ public class HealthBar extends GameObject {
             health2Image = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_2.png"));
             health1Image = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_1.png"));
             healthNoImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_no.png"));
+            healthShieldFullImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_shield_full.png"));
+            healthShieldHalfImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_shield_half.png"));
         } catch (IOException e) {
             System.out.println(e.getMessage() + "resource not found");
         }
@@ -33,6 +37,14 @@ public class HealthBar extends GameObject {
 
     void updateSprite(int noBars, Tank obj){
         switch (noBars){
+            case 5: {
+                this.sprite = healthShieldFullImage;
+                break;
+            }
+            case 4: {
+                this.sprite = healthShieldHalfImage;
+                break;
+            }
             case 3: {
                 this.sprite = healthFullImage;
                 break;

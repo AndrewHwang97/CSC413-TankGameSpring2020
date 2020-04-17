@@ -24,6 +24,7 @@ public class GameManager extends JPanel {
     private  Collisions collisions;
     BufferedImage worldImgTest;
     ArrayList<Walls> walls;
+    ArrayList<HealthPowerup> powerups;
 
 
     public static void main(String[] args){
@@ -48,6 +49,10 @@ public class GameManager extends JPanel {
                     gameManager.collisions.checkCollisions(gameManager.tankOne, gameManager.tankTwo,gameManager.walls.get(j));
                 }
 
+                for(int i = 0; i < gameManager.powerups.size(); i++){
+                    gameManager.collisions.checkCollisions(gameManager.tankOne,gameManager.tankTwo, gameManager.powerups.get(i));
+                }
+
                 gameManager.repaint();
                 //  System.out.println(tankExample.t1);
                 Thread.sleep(1000 / 144);
@@ -62,12 +67,15 @@ public class GameManager extends JPanel {
 
         this.world = new BufferedImage(GameManager.WORLD_WIDTH, GameManager.WORLD_HEIGHT, BufferedImage.TYPE_INT_RGB);
         BufferedImage tankImage = null;
+        BufferedImage tankImage2 = null;
         BufferedImage breakWall = null;
         BufferedImage unBreakWall = null;
+        BufferedImage powerup = null;
         bulletList = new ArrayList<Bullet>();
         collisions = new Collisions();
         worldImgTest = null;
         walls = new ArrayList<Walls>();
+        powerups = new ArrayList<HealthPowerup>();
 
         try {
 
@@ -91,9 +99,11 @@ public class GameManager extends JPanel {
              */
             //Using class loaders to read in resources
             tankImage = read(GameManager.class.getClassLoader().getResource("tank1.png"));
+            tankImage2 = read(GameManager.class.getClassLoader().getResource("tank2.png"));
             unBreakWall = read(GameManager.class.getClassLoader().getResource("unBreakableWall.gif"));
             breakWall = read(GameManager.class.getClassLoader().getResource("BreakableWall2.gif"));
-            worldImgTest = read(GameManager.class.getClassLoader().getResource("BackgroundTest.png"));
+            worldImgTest = read(GameManager.class.getClassLoader().getResource("bg.png"));
+            powerup = read(GameManager.class.getClassLoader().getResource("Shield2.png"));
 
             InputStreamReader isr = new InputStreamReader(GameManager.class.getClassLoader().getResourceAsStream("maps/map1"));
             BufferedReader mapReader = new BufferedReader(isr);
@@ -116,6 +126,9 @@ public class GameManager extends JPanel {
                             this.walls.add(br);
                             break;
                         case "3":
+                            HealthPowerup pu = new HealthPowerup(powerup,currCol*30,currRow*30);
+                            this.powerups.add(pu);
+                            break;
                         case "9":
                             UnbreakableWall ubr = new UnbreakableWall(unBreakWall,currCol*30,currRow*30);
                             this.walls.add(ubr);
@@ -135,7 +148,7 @@ public class GameManager extends JPanel {
 
         //TODO: add tank initializer here
         tankOne = new Tank(300, 500, 0, 0, 0, tankImage,this);
-        tankTwo = new Tank(900, 500, 0, 0, 180, tankImage,this);
+        tankTwo = new Tank(900, 500, 0, 0, 180, tankImage2,this);
 
 
         //TODO: add tank controls here
@@ -174,7 +187,9 @@ public class GameManager extends JPanel {
         buffer = world.createGraphics();
         buffer.setColor(Color.BLACK);
         buffer.fillRect(0,0,SCREEN_WIDTH,SCREEN_HEIGHT);
+        buffer.drawImage(worldImgTest,0,0,null);
         this.walls.forEach(wall -> wall.draw(buffer,null));
+        this.powerups.forEach(HealthPowerup -> HealthPowerup.draw(buffer,null));
         //buffer.drawImage(worldImgTest,0,0,null);
         //map1.draw(buffer,null);
 
@@ -197,7 +212,7 @@ public class GameManager extends JPanel {
         g2.drawImage(leftHalf,0,0,null);
         g2.drawImage(rightHalf,GameManager.SCREEN_WIDTH/2+4,0,null);
         g2.scale(.10,.10);
-        g2.drawImage(miniMap,SCREEN_WIDTH  * 4,200,null);
+        g2.drawImage(miniMap,SCREEN_WIDTH  * 4 + (SCREEN_WIDTH / 4),SCREEN_HEIGHT,null);
         g2.drawString("PLAYER 1 LIVES: " + this.tankOne.getNumberofLivesRemaining() , 5,30);
         g2.drawString("PLAYER 2 LIVES: " + this.tankTwo.getNumberofLivesRemaining() , 950,30);
 

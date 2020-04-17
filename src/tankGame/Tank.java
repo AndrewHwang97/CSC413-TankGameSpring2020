@@ -91,6 +91,7 @@ public class Tank {
     public Hitbox getHitBox(){return this.hitBox;}
 
     public void takeDamage() {this.hp -= 1; System.out.println(this.hp);}
+    public void setHp(int hp){this.hp = hp;}
 
     void toggleUpPressed() {
         this.UpPressed = true;
