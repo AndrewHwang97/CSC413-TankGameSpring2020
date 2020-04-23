@@ -14,11 +14,11 @@
    Download files from github. using the command line, change directories to csc413-tankgame-AndrewHwang97/jar. inside the jar directory, use command: java -jar csc413-tankgame-AndrewHwang97.jar to start the game.
 
 ## Controls: 
-   player1: Arrowup:move forward
-            Arrowdown:move backward
-            Arrowright:rotate right
-            Arrowleft:rotate left
-            Enterkey:shoot
+   player1: Arrowup:move forward \n
+            Arrowdown:move backward \n
+            Arrowright:rotate right \n
+            Arrowleft:rotate left\n
+            Enterkey:shoot\n
             
    player2: Wkey:move forward
             Skey:move backward
