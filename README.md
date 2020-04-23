@@ -5,10 +5,13 @@
 
 
 ## IDE project was made in: Intellij IDEA
-## Version of Java used: 1.8.0_201
-## Project built using Java Language Level 8
+## Version of Java used: 
+   1.8.0_201
+## Project built using 
+   Java Language Level 8
 
-## Current working directory used for the game: csc413-tankgame-AndrewHwang97/
+## Current working directory used for the game: 
+   csc413-tankgame-AndrewHwang97/
 
 ## How to run the game:
    Download files from github. using the command line, change directories to csc413-tankgame-AndrewHwang97/jar. inside the jar directory, use command: java -jar csc413-tankgame-AndrewHwang97.jar to start the game.
