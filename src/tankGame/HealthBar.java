@@ -20,8 +20,6 @@ public class HealthBar extends GameObject {
     public HealthBar(Image sprite,int x, int y){
         super(sprite, x, y);
 
-        this.x = x;
-        this.y = y;
         try{
             healthFullImage = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_full.png"));
             health2Image = ImageIO.read(Tank.class.getClassLoader().getResource("Health_bar_2.png"));

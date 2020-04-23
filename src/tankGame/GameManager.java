@@ -96,25 +96,6 @@ public class GameManager extends JPanel {
 
         try {
 
-            /*
-             * There is a subtle difference between using class
-             * loaders and File objects to read in resources for your
-             * tank games. First, File objects when given to input readers
-             * will use your project's working directory as the base path for
-             * finding the file. Class loaders will use the class path of the project
-             * as the base path for finding files. For Intellij, this will be in the out
-             * folder. if you expand the out folder, the expand the production folder, you
-             * will find a folder that has the same name as your project. This is the folder
-             * where your class path points to by default. Resources, will need to be stored
-             * in here for class loaders to load resources correctly.
-             *
-             * Also one important thing to keep in mind, Java input readers given File objects
-             * cannot be used to access file in jar files. So when building your jar, if you want
-             * all files to be stored inside the jar, you'll need to class loaders and not File
-             * objects.
-             *
-             */
-            //Using class loaders to read in resources
             tankImage = read(GameManager.class.getClassLoader().getResource("tank1.png"));
             tankImage2 = read(GameManager.class.getClassLoader().getResource("tank2.png"));
             unBreakWall = read(GameManager.class.getClassLoader().getResource("unBreakableWall.gif"));
@@ -156,10 +137,6 @@ public class GameManager extends JPanel {
                 }
             }
 
-
-
-            //Using file objects to read in resources.
-            //tankImage = read(new File("tank1.png"));
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
@@ -234,6 +211,7 @@ public class GameManager extends JPanel {
             Font endfont = new Font("Verdana",Font.BOLD,500);
             g2.setFont(endfont);
             g2.drawString("GAME OVER", SCREEN_WIDTH * 4, SCREEN_HEIGHT * 4);
+            g2.drawString("press shoot to close", SCREEN_WIDTH * 4, SCREEN_HEIGHT * 5);
         }
 
     }
