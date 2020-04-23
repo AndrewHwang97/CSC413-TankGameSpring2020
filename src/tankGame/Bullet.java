@@ -19,9 +19,6 @@ public class Bullet extends GameObject{
 
     public Bullet(Image sprite,int x, int y, int xSpeed, int ySpeed,int angle)  {
         super(sprite, x, y);
-
-        this.x = x;
-        this.y = y;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.angle = angle;
